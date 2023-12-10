@@ -45,7 +45,43 @@
 	],
 	"activationEvents": ["onLanguage:typescript", "onLanguage:typescriptreact"],
 	"main": "./out/extension.js",
-	"contributes": {},
+	"contributes": {
+		"configuration": [
+			{
+				"title": "Unsafe Typescript",
+				"properties": {
+					"unsafeTypescript.enable": {
+						"type": "boolean",
+						"default": true,
+						"markdownDescription": "Enable/disable Unsafe Typescript. Is enabled by default.",
+						"scope": "resource"
+					},
+					"unsafeTypescript.run": {
+						"type": "string",
+						"default": "onChange",
+						"enum": ["onChange", "onSave"],
+						"enumDescriptions": [
+							"Run the linter on every document change",
+							"Run the linter on document save"
+						],
+						"markdownDescription": "Run the linter `onChange` or `onSave`, default is `onChange`.",
+						"scope": "resource"
+					},
+					"unsafeTypescript.decorate": {
+						"type": "string",
+						"default": "keyword",
+						"enum": ["keyword", "expression"],
+						"enumDescriptions": [
+							"Decorate only the unsafe keyword inside the expression",
+							"Decorate the whole unsafe expression"
+						],
+						"markdownDescription": "Decorate the `unsafe` keyword or the whole expression. Default is `keyword`.",
+						"scope": "resource"
+					}
+				}
+			}
+		]
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"build:base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",

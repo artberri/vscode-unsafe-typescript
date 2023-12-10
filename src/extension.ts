@@ -5,17 +5,20 @@ import {
 	window,
 	workspace,
 } from "vscode";
+import { getConfig } from "./config";
 import { lint } from "./lint";
+import { extensionName } from "./utils";
 
 let diagnosticCollection: DiagnosticCollection;
 
 export function activate(context: ExtensionContext) {
+	let { enable, decorate, run } = getConfig();
+
 	let timeout: NodeJS.Timeout | undefined = undefined;
 	let activeEditor = window.activeTextEditor;
 
 	diagnosticCollection =
 		languages.createDiagnosticCollection("unsafe-typescript");
-	context.subscriptions.push(diagnosticCollection);
 
 	function updateLinting() {
 		if (!activeEditor) {
@@ -25,11 +28,15 @@ export function activate(context: ExtensionContext) {
 		const sourceCode = activeEditor.document.getText();
 		const fileName = activeEditor.document.fileName;
 		diagnosticCollection.clear();
-		const diagnosticArray = lint(fileName, sourceCode);
+		const diagnosticArray = lint(fileName, sourceCode, decorate);
 		diagnosticCollection.set(activeEditor.document.uri, diagnosticArray);
 	}
 
 	function triggerUpdateLinting(throttle = false) {
+		if (!enable) {
+			return;
+		}
+
 		if (timeout) {
 			clearTimeout(timeout);
 			timeout = undefined;
@@ -46,25 +53,69 @@ export function activate(context: ExtensionContext) {
 		triggerUpdateLinting();
 	}
 
-	window.onDidChangeActiveTextEditor(
+	const changeActiveTextEditorDisposable = window.onDidChangeActiveTextEditor(
 		(editor) => {
 			activeEditor = editor;
-			if (editor) {
+
+			if (!editor) {
+				return;
+			}
+
+			triggerUpdateLinting();
+		},
+	);
+
+	const saveTextDocumentDisposable = workspace.onDidSaveTextDocument(
+		(document) => {
+			if (activeEditor && document === activeEditor.document) {
 				triggerUpdateLinting();
 			}
 		},
-		null,
-		context.subscriptions,
 	);
 
-	workspace.onDidChangeTextDocument(
+	const changeTextDocumentDisposable = workspace.onDidChangeTextDocument(
 		(event) => {
-			if (activeEditor && event.document === activeEditor.document) {
+			if (
+				run === "onChange" &&
+				activeEditor &&
+				event.document === activeEditor.document
+			) {
 				triggerUpdateLinting(true);
 			}
 		},
-		null,
-		context.subscriptions,
+	);
+
+	const changeConfigurationDisposable = workspace.onDidChangeConfiguration(
+		(event) => {
+			if (event.affectsConfiguration(`${extensionName}.enable`)) {
+				const config = getConfig();
+				enable = config.enable;
+				if (enable) {
+					triggerUpdateLinting();
+				} else {
+					diagnosticCollection.clear();
+				}
+			}
+
+			if (event.affectsConfiguration(`${extensionName}.run`)) {
+				const config = getConfig();
+				run = config.run;
+			}
+
+			if (event.affectsConfiguration(`${extensionName}.decorate`)) {
+				const config = getConfig();
+				decorate = config.decorate;
+				triggerUpdateLinting();
+			}
+		},
+	);
+
+	context.subscriptions.push(
+		diagnosticCollection,
+		changeConfigurationDisposable,
+		changeActiveTextEditorDisposable,
+		saveTextDocumentDisposable,
+		changeTextDocumentDisposable,
 	);
 }
 

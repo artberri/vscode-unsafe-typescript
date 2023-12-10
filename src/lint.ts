@@ -1,7 +1,11 @@
 import * as ts from "typescript";
 import { Diagnostic, DiagnosticSeverity, Position, Range } from "vscode";
 
-export function lint(fileName: string, sourceCode: string): Diagnostic[] {
+export function lint(
+	fileName: string,
+	sourceCode: string,
+	decorate: "keyword" | "expression",
+): Diagnostic[] {
 	const sourceFile = ts.createSourceFile(
 		fileName,
 		sourceCode,
@@ -22,7 +26,7 @@ export function lint(fileName: string, sourceCode: string): Diagnostic[] {
 					.getChildren()
 					.find((child) => child.kind === ts.SyntaxKind.ExclamationToken);
 				report(
-					exclamationToken ?? node,
+					decorate === "keyword" && exclamationToken ? exclamationToken : node,
 					`Unsafe TypeScript assertion: '${node.getText()}'.
 
 TypeScript's ! non-null assertion operator asserts to the type system that an expression is non-nullable, as in not null or undefined. Using assertions to tell the type system new information is often a sign that code is not fully type-safe. It's generally better to structure program logic so that TypeScript understands when values may be nullable.`,
@@ -42,7 +46,7 @@ TypeScript's ! non-null assertion operator asserts to the type system that an ex
 					.getChildren()
 					.find((child) => child.kind === ts.SyntaxKind.AsKeyword);
 				report(
-					asKeyword ?? node,
+					decorate === "keyword" && asKeyword ? asKeyword : node,
 					`Unsafe TypeScript assertion: '${node.getText()}'.
 
 Type assertions in TypeScript are technically slightly different from what is meant by type casting in other languages. Type assertions are a way of saying to the compiler "I know better than you, it's actually this other type!" Use them sparingly, and use the 'satisfies' operator instead where possible.`,
@@ -68,7 +72,7 @@ Type assertions in TypeScript are technically slightly different from what is me
 				}
 
 				report(
-					start && end ? [start, end] : node,
+					decorate === "keyword" && start && end ? [start, end] : node,
 					`Unsafe TypeScript assertion: '${node.getText()}'.
 
 Type assertions in TypeScript are technically slightly different from what is meant by type casting in other languages. Type assertions are a way of saying to the compiler "I know better than you, it's actually this other type!" Use them sparingly, and use the 'satisfies' operator instead where possible.`,
@@ -77,7 +81,14 @@ Type assertions in TypeScript are technically slightly different from what is me
 			}
 
 			case ts.SyntaxKind.TypePredicate: {
-				report(node, "Unsafe type predicate");
+				const isKeyword = node
+					.getChildren()
+					.find((child) => child.kind === ts.SyntaxKind.IsKeyword);
+
+				report(
+					decorate === "keyword" && isKeyword ? isKeyword : node,
+					"Unsafe type predicate",
+				);
 				break;
 			}
 		}

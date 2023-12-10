@@ -1,0 +1,5 @@
+{
+  "unsafeTypescript.enable": true,
+  "unsafeTypescript.run": "onChange",
+  "unsafeTypescript.decorate": "keyword"
+}
