@@ -1,110 +1,121 @@
 {
-	"name": "unsafe-typescript",
-	"displayName": "Unsafe Typescript",
-	"description": "...",
-	"version": "1.0.0",
-	"license": "MIT",
-	"publisher": "alberto-varela",
-	"author": {
-		"name": "Alberto Varela",
-		"email": "hello@albertovarela.net",
-		"url": "https://www.albertovarela.net"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/artberri/vscode-unsafe-typescript.git"
-	},
-	"bugs": {
-		"url": "https://github.com/artberri/vscode-unsafe-typescript/issues",
-		"email": "hello@albertovarela.net"
-	},
-	"icon": "assets/icon.png",
-	"galleryBanner": {
-		"color": "#452c71",
-		"theme": "dark"
-	},
-	"pricing": "Free",
-	"homepage": "https://github.com/artberri/vscode-unsafe-typescript#readme",
-	"keywords": [
-		"vscode",
-		"code",
-		"extension",
-		"typescript",
-		"lint",
-		"unsafe",
-		"linter"
-	],
-	"engines": {
-		"vscode": "^1.80.0"
-	},
-	"categories": [
-		"Programming Languages",
-		"Debuggers",
-		"Visualization",
-		"Other"
-	],
-	"activationEvents": ["onLanguage:typescript", "onLanguage:typescriptreact"],
-	"main": "./out/extension.js",
-	"contributes": {
-		"configuration": [
-			{
-				"title": "Unsafe Typescript",
-				"properties": {
-					"unsafeTypescript.enable": {
-						"type": "boolean",
-						"default": true,
-						"markdownDescription": "Enable/disable Unsafe Typescript. Is enabled by default.",
-						"scope": "resource"
-					},
-					"unsafeTypescript.run": {
-						"type": "string",
-						"default": "onChange",
-						"enum": ["onChange", "onSave"],
-						"enumDescriptions": [
-							"Run the linter on every document change",
-							"Run the linter on document save"
-						],
-						"markdownDescription": "Run the linter `onChange` or `onSave`, default is `onChange`.",
-						"scope": "resource"
-					},
-					"unsafeTypescript.decorate": {
-						"type": "string",
-						"default": "keyword",
-						"enum": ["keyword", "expression"],
-						"enumDescriptions": [
-							"Decorate only the unsafe keyword inside the expression",
-							"Decorate the whole unsafe expression"
-						],
-						"markdownDescription": "Decorate the `unsafe` keyword or the whole expression. Default is `keyword`.",
-						"scope": "resource"
-					}
-				}
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"build:base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-		"build": "npm run build:base --sourcemap",
-		"build:watch": "npm run build:base --sourcemap --watch",
-		"compile": "npm run build:base --minify",
-		"lint": "biome ci .",
-		"watch": "concurrently -n build,types -c blue,green \"npm run build:watch\" \"npm run qa:types:watch\"",
-		"qa": "concurrently -n types,lint -c blue,green \"npm run qa:types\" \"npm run qa:lint\"",
-		"qa:types": "tsc --noEmit",
-		"qa:types:watch": "tsc -watch --noEmit",
-		"qa:lint": "npm run lint",
-		"package": "vsce package -o vscode-unsafe-typescript.vsix",
-		"publish": "vsce publish"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.4.1",
-		"@types/node": "20.x",
-		"@types/vscode": "1.80.x",
-		"concurrently": "^8.2.2",
-		"esbuild": "^0.19.5"
-	},
-	"dependencies": {
-		"typescript": "^5.3.3"
-	}
+  "name": "unsafe-typescript",
+  "displayName": "Unsafe Typescript",
+  "description": "...",
+  "version": "1.0.0",
+  "license": "MIT",
+  "publisher": "alberto-varela",
+  "author": {
+    "name": "Alberto Varela",
+    "email": "hello@albertovarela.net",
+    "url": "https://www.albertovarela.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/artberri/vscode-unsafe-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/artberri/vscode-unsafe-typescript/issues",
+    "email": "hello@albertovarela.net"
+  },
+  "icon": "assets/icon.png",
+  "galleryBanner": {
+    "color": "#452c71",
+    "theme": "dark"
+  },
+  "pricing": "Free",
+  "homepage": "https://github.com/artberri/vscode-unsafe-typescript#readme",
+  "keywords": [
+    "vscode",
+    "code",
+    "extension",
+    "typescript",
+    "lint",
+    "unsafe",
+    "linter"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Visualization",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "onLanguage:svelte",
+    "onLanguage:vue"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": [
+      {
+        "title": "Unsafe Typescript",
+        "properties": {
+          "unsafeTypescript.enable": {
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "Enable/disable Unsafe Typescript. Is enabled by default.",
+            "scope": "resource"
+          },
+          "unsafeTypescript.run": {
+            "type": "string",
+            "default": "onChange",
+            "enum": [
+              "onChange",
+              "onSave"
+            ],
+            "enumDescriptions": [
+              "Run the linter on every document change",
+              "Run the linter on document save"
+            ],
+            "markdownDescription": "Run the linter `onChange` or `onSave`, default is `onChange`.",
+            "scope": "resource"
+          },
+          "unsafeTypescript.decorate": {
+            "type": "string",
+            "default": "keyword",
+            "enum": [
+              "keyword",
+              "expression"
+            ],
+            "enumDescriptions": [
+              "Decorate only the unsafe keyword inside the expression",
+              "Decorate the whole unsafe expression"
+            ],
+            "markdownDescription": "Decorate the `unsafe` keyword or the whole expression. Default is `keyword`.",
+            "scope": "resource"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "build:base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "build": "npm run build:base --sourcemap",
+    "build:watch": "npm run build:base --sourcemap --watch",
+    "compile": "npm run build:base --minify",
+    "lint": "biome ci .",
+    "watch": "concurrently -n build,types -c blue,green \"npm run build:watch\" \"npm run qa:types:watch\"",
+    "qa": "concurrently -n types,lint -c blue,green \"npm run qa:types\" \"npm run qa:lint\"",
+    "qa:types": "tsc --noEmit",
+    "qa:types:watch": "tsc -watch --noEmit",
+    "qa:lint": "npm run lint",
+    "package": "vsce package -o vscode-unsafe-typescript.vsix",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.4.1",
+    "@types/node": "20.x",
+    "@types/vscode": "1.80.x",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.19.5"
+  },
+  "dependencies": {
+    "typescript": "^5.3.3"
+  }
 }

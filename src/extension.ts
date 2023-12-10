@@ -12,7 +12,7 @@ import { extensionName } from "./utils";
 
 let diagnosticCollection: DiagnosticCollection;
 
-const supportedLanguages = ["typescript", "typescriptreact"];
+const supportedLanguages = ["typescript", "typescriptreact", "vue", "svelte"];
 
 export function activate(context: ExtensionContext) {
 	debug("Activating extension");
@@ -42,7 +42,12 @@ export function activate(context: ExtensionContext) {
 		const sourceCode = activeEditor.document.getText();
 		const fileName = activeEditor.document.fileName;
 		diagnosticCollection.clear();
-		const diagnosticArray = lint(fileName, sourceCode, decorate);
+		const diagnosticArray = lint(
+			fileName,
+			sourceCode,
+			decorate,
+			activeEditor.document.languageId,
+		);
 		diagnosticCollection.set(activeEditor.document.uri, diagnosticArray);
 	}
 

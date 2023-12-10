@@ -1,4 +1,7 @@
 {
+	"files": {
+		"ignore": ["**/out/**"]
+	},
 	"formatter": {
 		"enabled": true,
 		"lineWidth": 80,

@@ -5,10 +5,24 @@ export function lint(
 	fileName: string,
 	sourceCode: string,
 	decorate: "keyword" | "expression",
+	languageId: string,
 ): Diagnostic[] {
+	let code = sourceCode;
+	let baseLineNumber = 0;
+
+	if (languageId === "vue" || languageId === "svelte") {
+		const scriptBlock = extractScriptBlock(sourceCode);
+		if (scriptBlock[0]) {
+			code = scriptBlock[0];
+			baseLineNumber = scriptBlock[1];
+		} else {
+			return [];
+		}
+	}
+
 	const sourceFile = ts.createSourceFile(
 		fileName,
-		sourceCode,
+		code,
 		ts.ScriptTarget.Latest,
 		/*setParentNodes */ true,
 	);
@@ -104,8 +118,8 @@ Type assertions in TypeScript are technically slightly different from what is me
 			sourceFile.getLineAndCharacterOfPosition(end);
 
 		const range = new Range(
-			new Position(line, character),
-			new Position(lineEnd, characterEnd),
+			new Position(line + baseLineNumber, character),
+			new Position(lineEnd + baseLineNumber, characterEnd),
 		);
 
 		diagnosticArray.push(
@@ -131,3 +145,14 @@ const isSafeTypeAnnotation = (type: ts.Node): boolean => {
 
 	return false;
 };
+
+function extractScriptBlock(source: string): [string | undefined, number] {
+	const scriptTagPattern =
+		/<script[^>]*lang="(ts|tsx)"[^>]*>(\r\n|\r|\n)([\s\S]*?)<\/script>/;
+	const match = source.match(scriptTagPattern);
+	if (match) {
+		const linesBeforeMatch = source.slice(0, match.index).split("\n").length;
+		return [match[3]?.trim(), linesBeforeMatch];
+	}
+	return [undefined, -1];
+}
