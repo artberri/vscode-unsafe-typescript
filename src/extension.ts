@@ -7,11 +7,16 @@ import {
 } from "vscode";
 import { getConfig } from "./config";
 import { lint } from "./lint";
+import { debug } from "./logger";
 import { extensionName } from "./utils";
 
 let diagnosticCollection: DiagnosticCollection;
 
+const supportedLanguages = ["typescript", "typescriptreact"];
+
 export function activate(context: ExtensionContext) {
+	debug("Activating extension");
+
 	let { enable, decorate, run } = getConfig();
 
 	let timeout: NodeJS.Timeout | undefined = undefined;
@@ -22,9 +27,18 @@ export function activate(context: ExtensionContext) {
 
 	function updateLinting() {
 		if (!activeEditor) {
+			debug("No active editor, aborting linting");
 			return;
 		}
 
+		if (!supportedLanguages.includes(activeEditor.document.languageId)) {
+			debug(`Language ${activeEditor.document.languageId} not supported`);
+			return;
+		}
+
+		debug(
+			`Linting ${activeEditor.document.fileName} with language ${activeEditor.document.languageId}`,
+		);
 		const sourceCode = activeEditor.document.getText();
 		const fileName = activeEditor.document.fileName;
 		diagnosticCollection.clear();
@@ -34,6 +48,7 @@ export function activate(context: ExtensionContext) {
 
 	function triggerUpdateLinting(throttle = false) {
 		if (!enable) {
+			debug("Linting disabled, aborting linting");
 			return;
 		}
 
@@ -50,6 +65,7 @@ export function activate(context: ExtensionContext) {
 	}
 
 	if (activeEditor) {
+		debug("Triggering initial linting");
 		triggerUpdateLinting();
 	}
 
@@ -88,6 +104,8 @@ export function activate(context: ExtensionContext) {
 	const changeConfigurationDisposable = workspace.onDidChangeConfiguration(
 		(event) => {
 			if (event.affectsConfiguration(`${extensionName}.enable`)) {
+				debug("Updating enable configuration");
+
 				const config = getConfig();
 				enable = config.enable;
 				if (enable) {
@@ -98,11 +116,15 @@ export function activate(context: ExtensionContext) {
 			}
 
 			if (event.affectsConfiguration(`${extensionName}.run`)) {
+				debug("Updating run configuration");
+
 				const config = getConfig();
 				run = config.run;
 			}
 
 			if (event.affectsConfiguration(`${extensionName}.decorate`)) {
+				debug("Updating decorate configuration");
+
 				const config = getConfig();
 				decorate = config.decorate;
 				triggerUpdateLinting();
@@ -120,5 +142,7 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate(): Thenable<void> | undefined {
+	debug("Deactivating extension");
+
 	return undefined;
 }
