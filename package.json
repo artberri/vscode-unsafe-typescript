@@ -1,7 +1,7 @@
 {
   "name": "unsafe-typescript",
-  "displayName": "Unsafe Typescript",
-  "description": "...",
+  "displayName": "Unsafe Typescript Highlighter",
+  "description": "Visually mark out unsafe Typescript features in your code.",
   "version": "1.0.0",
   "license": "MIT",
   "publisher": "alberto-varela",
@@ -20,8 +20,8 @@
   },
   "icon": "assets/icon.png",
   "galleryBanner": {
-    "color": "#452c71",
-    "theme": "dark"
+    "color": "#a9c6e5",
+    "theme": "light"
   },
   "pricing": "Free",
   "homepage": "https://github.com/artberri/vscode-unsafe-typescript#readme",
