@@ -2,31 +2,31 @@
 
 Visually mark out unsafe Typescript features in your code.
 
-**Supports**: Typescript, JSX (`.tsx`) and Vue/Svelte single component files.
+**Supports**: Typescript, JSX (`.tsx`), and Vue or Svelte single component files.
 
 ## Features
 
-TODO: ...
+It highlights: non-null assertions, type assertions (both, angle bracketed and those using the `as` keyword), and type predicates.
 
 ![Highlight Typescript unsafe features](assets/image.png)
 
 ### Motivation
 
-TODO: Why and thanks
+The purpose of this extension differs from traditional linting tools such as Eslint or Biome. While linting allows you to prohibit or warn against certain code practices, these messages can sometimes go unnoticed. The primary goal of the Unsafe TypeScript Highlighter is to ensure that you can consistently and effortlessly identify these problems through visual cues, so that they never escape your attention.
 
-Thanks to [Matt Pocock](https://twitter.com/mattpocockuk/status/1732485506556940782)
+I got the idea from [this tweet by Matt Pocock](https://twitter.com/mattpocockuk/status/1732485506556940782), thank you for that and for spreading the word about Typescript.
 
 ## Extension Settings
 
-This extension contributes the following settings: TODO: 
+This extension contributes the following settings:
 
-- `unsafeTypescript.enable`: Specifies the relative path to the `package.json` file of the root of the workspaces. Default value: `package.json`.
-- `unsafeTypescript.run`: This extension needs to modify the `files.exclude` setting to hide folders. This setting specifies the scope of the setting change. If `workspace`, the setting will be modified in the workspace settings. If `workspace-folder`, the setting will be modified in the workspace folder settings. If `global`, the setting will be modified in the user settings.
-- `unsafeTypescript.decorate`: Enable output logs for debugging purposes.
-- `unsafeTypescript.highlight.nonNullAssertion.enable`: TODO
-- `unsafeTypescript.highlight.asTypeAssertion.enable`: TODO
-- `unsafeTypescript.highlight.angleBracketedTypeAssertion.enable`: TODO
-- `unsafeTypescript.highlight.typePredicate.enable`: TODO
+- `unsafeTypescript.enable`: Controls whether the Unsafe Typescript Highlighter extension is enabled or disabled. It is enabled by default.
+- `unsafeTypescript.run`: Specifies when the linter should run. Options are `onChange` (run the linter on every document change) or `onSave` (run the linter on document save). The default is `onChange`.
+- `unsafeTypescript.decorate`: Determines the type of decoration for unsafe code. Options include `keyword` (decorate only the unsafe keyword inside the expression) or `expression` (decorate the whole unsafe expression). The default is `keyword`.
+- `unsafeTypescript.highlight.nonNullAssertion.enable`: Enables or disables the highlighting of non-null assertions (`!`). It is enabled by default.
+- `unsafeTypescript.highlight.asTypeAssertion.enable`: Enables or disables the highlighting of `as` type assertions. It is enabled by default.
+- `unsafeTypescript.highlight.angleBracketedTypeAssertion.enable`: Enables or disables the highlighting of angle bracketed assertions. It is enabled by default.
+- `unsafeTypescript.highlight.typePredicate.enable`: Enables or disables the highlighting of type predicates. It is enabled by default.
 
 ## Release Notes
 
