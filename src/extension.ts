@@ -17,7 +17,7 @@ const supportedLanguages = ["typescript", "typescriptreact", "vue", "svelte"];
 export function activate(context: ExtensionContext) {
 	debug("Activating extension");
 
-	let { enable, decorate, run } = getConfig();
+	let { enable, decorate, run, highlight } = getConfig();
 
 	let timeout: NodeJS.Timeout | undefined = undefined;
 	let activeEditor = window.activeTextEditor;
@@ -45,8 +45,8 @@ export function activate(context: ExtensionContext) {
 		const diagnosticArray = lint(
 			fileName,
 			sourceCode,
-			decorate,
 			activeEditor.document.languageId,
+			{ decorate, highlight },
 		);
 		diagnosticCollection.set(activeEditor.document.uri, diagnosticArray);
 	}
@@ -132,6 +132,14 @@ export function activate(context: ExtensionContext) {
 
 				const config = getConfig();
 				decorate = config.decorate;
+				triggerUpdateLinting();
+			}
+
+			if (event.affectsConfiguration(`${extensionName}.highlight`)) {
+				debug("Updating highlight configuration");
+
+				const config = getConfig();
+				highlight = config.highlight;
 				triggerUpdateLinting();
 			}
 		},

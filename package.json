@@ -88,6 +88,30 @@
             ],
             "markdownDescription": "Decorate the `unsafe` keyword or the whole expression. Default is `keyword`.",
             "scope": "resource"
+          },
+          "unsafeTypescript.highlight.nonNullAssertion.enable": {
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "Enable/disable highlighting non-null assertions (`!`). Is enabled by default.",
+            "scope": "resource"
+          },
+          "unsafeTypescript.highlight.asTypeAssertion.enable": {
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "Enable/disable highlighting `as` type assertions. Is enabled by default.",
+            "scope": "resource"
+          },
+          "unsafeTypescript.highlight.angleBracketedTypeAssertion.enable": {
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "Enable/disable highlighting angle bracketed assertions. Is enabled by default.",
+            "scope": "resource"
+          },
+          "unsafeTypescript.highlight.typePredicate.enable": {
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "Enable/disable highlighting type predicates. Is enabled by default.",
+            "scope": "resource"
           }
         }
       }

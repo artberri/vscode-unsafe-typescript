@@ -1,5 +1,6 @@
 {
   "unsafeTypescript.enable": true,
   "unsafeTypescript.run": "onChange",
-  "unsafeTypescript.decorate": "keyword"
+  "unsafeTypescript.decorate": "keyword",
+  "unsafeTypescript.highlight.typePredicate.enable": true
 }

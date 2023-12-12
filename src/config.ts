@@ -5,6 +5,12 @@ export interface UnsafeTypescriptVSCodeConfig {
 	enable: boolean;
 	run: "onChange" | "onSave";
 	decorate: "keyword" | "expression";
+	highlight: {
+		nonNullAssertion: boolean;
+		asTypeAssertion: boolean;
+		angleBracketedTypeAssertion: boolean;
+		typePredicate: boolean;
+	};
 }
 
 export function getConfig(): UnsafeTypescriptVSCodeConfig {
@@ -16,5 +22,12 @@ export function getConfig(): UnsafeTypescriptVSCodeConfig {
 		decorate: ["keyword", "expression"].includes(config.decorate)
 			? config.decorate
 			: "keyword",
+		highlight: {
+			nonNullAssertion: !!config.highlight.nonNullAssertion.enable,
+			asTypeAssertion: !!config.highlight.asTypeAssertion.enable,
+			angleBracketedTypeAssertion:
+				!!config.highlight.angleBracketedTypeAssertion.enable,
+			typePredicate: !!config.highlight.typePredicate.enable,
+		},
 	};
 }

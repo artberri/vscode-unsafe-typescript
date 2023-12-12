@@ -1,14 +1,19 @@
 import * as ts from "typescript";
 import { Diagnostic, DiagnosticSeverity, Position, Range } from "vscode";
+import type { UnsafeTypescriptVSCodeConfig } from "./config";
 
 export function lint(
 	fileName: string,
 	sourceCode: string,
-	decorate: "keyword" | "expression",
 	languageId: string,
+	config: {
+		decorate: UnsafeTypescriptVSCodeConfig["decorate"];
+		highlight: UnsafeTypescriptVSCodeConfig["highlight"];
+	},
 ): Diagnostic[] {
 	let code = sourceCode;
 	let baseLineNumber = 0;
+	const { decorate, highlight } = config;
 
 	if (languageId === "vue" || languageId === "svelte") {
 		const scriptBlock = extractScriptBlock(sourceCode);
@@ -36,6 +41,10 @@ export function lint(
 	function lintNode(node: ts.Node) {
 		switch (node.kind) {
 			case ts.SyntaxKind.NonNullExpression: {
+				if (!highlight.nonNullAssertion) {
+					break;
+				}
+
 				const exclamationToken = node
 					.getChildren()
 					.find((child) => child.kind === ts.SyntaxKind.ExclamationToken);
@@ -49,6 +58,10 @@ TypeScript's ! non-null assertion operator asserts to the type system that an ex
 			}
 
 			case ts.SyntaxKind.AsExpression: {
+				if (!highlight.asTypeAssertion) {
+					break;
+				}
+
 				const children = node.getChildren();
 				const typeAnnotation = children[children.length - 1];
 
@@ -69,6 +82,10 @@ Type assertions in TypeScript are technically slightly different from what is me
 			}
 
 			case ts.SyntaxKind.TypeAssertionExpression: {
+				if (!highlight.angleBracketedTypeAssertion) {
+					break;
+				}
+
 				const children = node.getChildren();
 				const startIndex = children.findIndex(
 					(child) => child.kind === ts.SyntaxKind.LessThanToken,
@@ -95,13 +112,19 @@ Type assertions in TypeScript are technically slightly different from what is me
 			}
 
 			case ts.SyntaxKind.TypePredicate: {
+				if (!highlight.typePredicate) {
+					break;
+				}
+
 				const isKeyword = node
 					.getChildren()
 					.find((child) => child.kind === ts.SyntaxKind.IsKeyword);
 
 				report(
 					decorate === "keyword" && isKeyword ? isKeyword : node,
-					"Unsafe type predicate",
+					`Unsafe type predicate: '${node.getText()}'.
+
+Type predicates rely on custom functions or expressions to determine the type of a variable. If these functions or expressions are not carefully implemented or do not cover all possible cases, it can lead to incorrect type narrowing. In other words, the compiler may infer a more specific type for a variable than is actually accurate, potentially resulting in runtime errors. Use them carefully and actively test them in various scenarios, including edge cases, to identify any potential issues.`,
 				);
 				break;
 			}
