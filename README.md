@@ -8,7 +8,7 @@ Visually mark out unsafe Typescript features in your code.
 
 It highlights: non-null assertions, type assertions (both, angle bracketed and those using the `as` keyword), and type predicates.
 
-![Highlight Typescript unsafe features](https://albertovarela.net/images/vscode-unsafe-typescript-screenshot.png)
+![Highlight Typescript unsafe features](assets/image.png)
 
 ### Motivation
 
