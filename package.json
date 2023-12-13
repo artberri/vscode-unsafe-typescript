@@ -2,7 +2,7 @@
   "name": "unsafe-typescript",
   "displayName": "Unsafe Typescript Highlighter",
   "description": "Visually mark out unsafe Typescript features in your code.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "publisher": "alberto-varela",
   "author": {
@@ -130,14 +130,15 @@
     "qa:types:watch": "tsc -watch --noEmit",
     "qa:lint": "npm run lint",
     "package": "vsce package -o vscode-unsafe-typescript.vsix",
-    "publish": "vsce publish"
+    "publish": "vsce publish",
+    "code:install": "npm run package && code --install-extension vscode-unsafe-typescript.vsix"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.4.1",
     "@types/node": "20.x",
     "@types/vscode": "1.80.x",
     "concurrently": "^8.2.2",
-    "esbuild": "^0.19.5"
+    "esbuild": "^0.19.9"
   },
   "dependencies": {
     "typescript": "^5.3.3"
