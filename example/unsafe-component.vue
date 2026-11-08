@@ -25,17 +25,16 @@ export const asUnknown = () => {
 	console.log(["hello", "world"] as unknown); // This is perfectly safe
 };
 
-
 export default defineComponent({
-  data() {
-    return {
-      count: 1,
-    };
-  },
+	data() {
+		return {
+			count: 1,
+		};
+	},
 });
 </script>
 
 <template>
-  <!-- type checking and auto-completion enabled -->
-  <div>{{ count.toFixed(2) }}</div>
+	<!-- type checking and auto-completion enabled -->
+	<div>{{ count.toFixed(2) }}</div>
 </template>

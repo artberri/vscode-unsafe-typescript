@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import { Diagnostic, DiagnosticSeverity, Position, Range } from "vscode";
+
 import type { UnsafeTypescriptVSCodeConfig } from "./config";
 
 export function lint(

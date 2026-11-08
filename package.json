@@ -123,28 +123,33 @@
     "build": "npm run build:base -- --sourcemap",
     "build:watch": "npm run build:base -- --sourcemap --watch",
     "compile": "npm run build:base -- --minify",
-    "lint": "biome ci .",
+    "lint": "oxlint --type-aware --deny-warnings",
+    "lint:fix": "oxlint --type-aware --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "watch": "concurrently -n build,types -c blue,green \"npm run build:watch\" \"npm run qa:types:watch\"",
-    "qa": "concurrently -n types,lint -c blue,green \"npm run qa:types\" \"npm run qa:lint\"",
+    "qa": "concurrently -n types,lint,format -c blue,green,magenta \"npm run qa:types\" \"npm run qa:lint\" \"npm run qa:format\"",
     "qa:types": "tsc --noEmit",
     "qa:types:watch": "tsc --watch --noEmit",
     "qa:lint": "npm run lint",
+    "qa:format": "npm run format:check",
     "package": "vsce package -o vscode-unsafe-typescript.vsix",
     "publish": "vsce publish",
     "code:install": "npm run package && code --install-extension vscode-unsafe-typescript.vsix"
   },
   "devDependencies": {
-    "@biomejs/biome": "~1.4.1",
     "@types/node": "^20.19.43",
     "@types/vscode": "1.80.x",
     "@vscode/vsce": "^4.1.0",
     "concurrently": "^10.0.7",
     "esbuild": "^0.28.2",
     "ovsx": "^1.3.0",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
+    "oxlint-tsgolint": "^7.0.2006",
     "typescript": "^6.0.3"
   },
   "allowScripts": {
-    "@biomejs/biome": false,
     "esbuild": false,
     "@vscode/vsce-sign": false
   }

@@ -7,6 +7,9 @@ example/**
 .github/**
 node_modules/**
 **/tsconfig.json
-**/biome.json
+**/.oxlintrc.json
+**/.oxfmtrc.json
+.prototools
+.editorconfig
 **/*.map
 **/*.ts

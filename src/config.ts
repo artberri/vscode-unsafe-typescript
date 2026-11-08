@@ -1,4 +1,5 @@
 import { workspace } from "vscode";
+
 import { extensionName } from "./utils";
 
 export interface UnsafeTypescriptVSCodeConfig {

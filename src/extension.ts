@@ -5,6 +5,7 @@ import {
 	window,
 	workspace,
 } from "vscode";
+
 import { getConfig } from "./config";
 import { lint } from "./lint";
 import { debug } from "./logger";
