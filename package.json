@@ -134,7 +134,6 @@
     "qa:lint": "npm run lint",
     "qa:format": "npm run format:check",
     "package": "vsce package -o vscode-unsafe-typescript.vsix",
-    "publish": "vsce publish",
     "code:install": "npm run package && code --install-extension vscode-unsafe-typescript.vsix"
   },
   "devDependencies": {
