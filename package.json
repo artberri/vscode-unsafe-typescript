@@ -120,27 +120,32 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "build:base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "build": "npm run build:base --sourcemap",
-    "build:watch": "npm run build:base --sourcemap --watch",
-    "compile": "npm run build:base --minify",
+    "build": "npm run build:base -- --sourcemap",
+    "build:watch": "npm run build:base -- --sourcemap --watch",
+    "compile": "npm run build:base -- --minify",
     "lint": "biome ci .",
     "watch": "concurrently -n build,types -c blue,green \"npm run build:watch\" \"npm run qa:types:watch\"",
     "qa": "concurrently -n types,lint -c blue,green \"npm run qa:types\" \"npm run qa:lint\"",
     "qa:types": "tsc --noEmit",
-    "qa:types:watch": "tsc -watch --noEmit",
+    "qa:types:watch": "tsc --watch --noEmit",
     "qa:lint": "npm run lint",
     "package": "vsce package -o vscode-unsafe-typescript.vsix",
     "publish": "vsce publish",
     "code:install": "npm run package && code --install-extension vscode-unsafe-typescript.vsix"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.4.1",
-    "@types/node": "20.x",
+    "@biomejs/biome": "~1.4.1",
+    "@types/node": "^20.19.43",
     "@types/vscode": "1.80.x",
-    "concurrently": "^8.2.2",
-    "esbuild": "^0.19.9"
+    "@vscode/vsce": "^4.1.0",
+    "concurrently": "^10.0.7",
+    "esbuild": "^0.28.2",
+    "ovsx": "^1.3.0",
+    "typescript": "^6.0.3"
   },
-  "dependencies": {
-    "typescript": "^5.3.3"
+  "allowScripts": {
+    "@biomejs/biome": false,
+    "esbuild": false,
+    "@vscode/vsce-sign": false
   }
 }
