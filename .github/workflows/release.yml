@@ -67,7 +67,7 @@ jobs:
           name: vsix
           path: ${{ env.VSIX }}
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 30 # match GitHub's re-run window, so a failed publish can be retried
 
   publish-marketplace:
     needs: build
